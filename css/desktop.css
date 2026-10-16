@@ -1,0 +1,225 @@
+/*
+ * Desktop layout (>= 1024px)
+ * Mobile layout is untouched: every rule lives inside the media query.
+ * Colors come from the existing Tailwind classes; only layout is changed here.
+ */
+
+.nav-brand {
+    display: none;
+}
+
+/* Full-width similar products row exists only on desktop */
+.similar-desktop {
+    display: none !important;
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --topnav-height: 64px;
+    }
+
+    body {
+        padding-top: var(--topnav-height);
+    }
+
+    /* ---------- Bottom navigation becomes a top bar ---------- */
+    .bottom-nav {
+        top: 0 !important;
+        bottom: auto !important;
+        height: var(--topnav-height);
+        padding-bottom: 0 !important;
+        border-top-width: 0 !important;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+    }
+
+    .bottom-nav > div {
+        max-width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 1rem;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.25rem;
+    }
+
+    .bottom-nav .nav-item {
+        flex: none;
+        flex-direction: row;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+    }
+
+    .bottom-nav .nav-item:hover {
+        background-color: rgba(0, 128, 128, 0.08);
+    }
+
+    .bottom-nav .nav-item p {
+        font-size: 0.875rem;
+    }
+
+    /* Label sits next to the icon, so keep the badge clear of it */
+    .bottom-nav .nav-item:has(.cart-badge) {
+        gap: 0.875rem;
+    }
+
+    .bottom-nav .cart-badge {
+        top: -0.5rem !important;
+        right: -0.625rem !important;
+    }
+
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-right: auto;
+        font-size: 1.125rem;
+        font-weight: 700;
+    }
+
+    /* Page headers stick below the top bar */
+    header.sticky {
+        top: var(--topnav-height) !important;
+    }
+
+    /* ---------- Centered page container ---------- */
+    .app-shell {
+        max-width: 1200px;
+        margin: 0 auto;
+        min-height: calc(100vh - var(--topnav-height)) !important;
+    }
+
+    .app-shell--narrow {
+        max-width: 720px;
+    }
+
+    /* overflow-x: hidden turns the shell into a scroll container, which breaks
+       sticky headers; clip hides overflow without creating one */
+    .app-shell.overflow-x-hidden {
+        overflow-x: clip !important;
+        overflow-y: visible !important;
+    }
+
+    /* No bottom nav to clear on desktop */
+    .app-shell > main,
+    .app-shell > #emptyState {
+        padding-bottom: 3rem !important;
+    }
+
+    /* ---------- Product detail: image left, info right ---------- */
+    .detail-columns {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 3rem;
+        align-items: start;
+        padding: 1rem;
+    }
+
+    .detail-media {
+        position: sticky;
+        top: calc(var(--topnav-height) + 5rem);
+    }
+
+    .detail-media #imageGallery {
+        padding: 0;
+    }
+
+    .detail-media #imageGallery > div > div {
+        max-width: none;
+    }
+
+    .detail-info > main {
+        padding: 0;
+    }
+
+    /* Similar products move below both columns */
+    #similarSection {
+        display: none !important;
+    }
+
+    .similar-desktop:not(.hidden) {
+        display: block !important;
+    }
+
+    .similar-desktop a,
+    .similar-desktop a > div {
+        width: 10rem;
+    }
+
+    #addToCartBar {
+        margin-bottom: 0 !important;
+        padding: 1.5rem 0 0;
+        border-top-width: 0;
+        background: transparent;
+        backdrop-filter: none;
+    }
+
+    /* ---------- Cart: items left, summary right ---------- */
+    #cartScrollArea {
+        flex-direction: row;
+        gap: 2rem;
+        padding: 0 1rem 1rem;
+    }
+
+    #cartItemsWrapper {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #cartSummary {
+        width: 380px;
+        flex-shrink: 0;
+        align-self: flex-start;
+        margin-top: 1rem;
+        padding: 0 !important;
+        border-top-width: 0;
+    }
+
+    /* Summary details always open on desktop */
+    #summaryDetails {
+        grid-template-rows: 1fr !important;
+    }
+
+    #summaryToggle {
+        pointer-events: none;
+    }
+
+    #summaryCard .summary-chevron {
+        display: none;
+    }
+
+    /* ---------- Checkout action bar follows the narrow column ---------- */
+    #actionBar {
+        left: 50% !important;
+        right: auto !important;
+        width: 720px;
+        transform: translateX(-50%);
+    }
+
+    /* ---------- Bottom sheets become centered dialogs ---------- */
+    .sheet-overlay {
+        align-items: center !important;
+        justify-content: center;
+    }
+
+    .sheet {
+        inset: 0 !important;
+        margin: auto;
+        width: 560px;
+        max-width: calc(100% - 2rem);
+        height: fit-content;
+        border-radius: 1.5rem !important;
+        transform: none !important;
+        animation: sheet-fade-in 0.2s ease-out !important;
+    }
+
+    .sheet-overlay > .sheet {
+        width: 420px;
+    }
+
+    @keyframes sheet-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+}

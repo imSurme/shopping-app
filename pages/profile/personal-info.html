@@ -129,10 +129,11 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
     </style>
+    <link rel="stylesheet" href="../../css/desktop.css"/>
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
-    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+    <div class="app-shell app-shell--narrow relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
         
         <!-- Header -->
         <header class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md safe-area-top">
@@ -257,6 +258,10 @@
         <!-- Bottom Navigation -->
         <nav class="bottom-nav fixed bottom-0 left-0 right-0 z-20 bg-background-light dark:bg-background-dark border-t border-border-light dark:border-border-dark">
             <div class="flex px-2 py-1">
+                <a class="nav-brand text-primary" href="../../index.html">
+                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+                    Modern Shopping
+                </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2" href="../../index.html">
                     <span class="material-symbols-outlined text-2xl">home</span>
                     <p class="text-xs font-medium">Ana Sayfa</p>
