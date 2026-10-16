@@ -495,6 +495,10 @@
         function deletePayment(id) {
             if (confirm('Bu kartı silmek istediğinizden emin misiniz?')) {
                 paymentMethods = paymentMethods.filter(p => p.id !== id);
+                // Keep a default card if any remain
+                if (paymentMethods.length > 0 && !paymentMethods.some(p => p.isDefault)) {
+                    paymentMethods[0].isDefault = true;
+                }
                 savePaymentMethods();
                 renderPaymentMethods();
                 showMessage('Kart silindi!', 'success');
@@ -550,6 +554,11 @@
                 isDefault: document.getElementById('isDefaultPayment').checked
             };
 
+            // Only one default card
+            if (paymentData.isDefault) {
+                paymentMethods.forEach(p => p.isDefault = false);
+            }
+
             if (editId) {
                 // Update existing
                 const index = paymentMethods.findIndex(p => p.id === parseInt(editId));
@@ -558,10 +567,11 @@
                 }
             } else {
                 // Add new
-                if (paymentData.isDefault) {
-                    paymentMethods.forEach(p => p.isDefault = false);
-                }
                 paymentMethods.push(paymentData);
+            }
+
+            if (!paymentMethods.some(p => p.isDefault)) {
+                paymentMethods[0].isDefault = true;
             }
 
             savePaymentMethods();

@@ -251,7 +251,14 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark mb-1">İl</label>
-                                <input type="text" id="city" class="form-input w-full px-4 py-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:outline-none transition-all" placeholder="İstanbul">
+                                <select id="city" class="form-input w-full px-4 py-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:outline-none transition-all">
+                                    <option value="">İl Seçin</option>
+                                    <option value="İstanbul">İstanbul</option>
+                                    <option value="Ankara">Ankara</option>
+                                    <option value="İzmir">İzmir</option>
+                                    <option value="Antalya">Antalya</option>
+                                    <option value="Bursa">Bursa</option>
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark mb-1">İlçe</label>
@@ -483,8 +490,6 @@
                 container.appendChild(card);
             });
             
-            // Başlangıçta hiçbir adres seçili değil - form boş kalır
-            // Kullanıcı bir adres seçerse o zaman form dolar
         }
         
         function selectAddress(addressId) {
@@ -495,7 +500,11 @@
                 document.getElementById('lastName').value = addr.fullName.split(' ').slice(1).join(' ') || '';
                 document.getElementById('phone').value = addr.phone || '';
                 document.getElementById('address').value = addr.fullAddress || '';
-                document.getElementById('city').value = addr.city || '';
+                const citySelect = document.getElementById('city');
+                if (addr.city && ![...citySelect.options].some(o => o.value === addr.city)) {
+                    citySelect.add(new Option(addr.city, addr.city));
+                }
+                citySelect.value = addr.city || '';
                 document.getElementById('district').value = addr.district || '';
             }
             loadSavedAddresses(); // seçili görünümü güncelle
@@ -563,6 +572,11 @@
             }
             
             loadSavedAddresses();
+            // Varsayılan adresi otomatik seç (yoksa form boş kalır)
+            const defaultAddress = savedAddresses.find(a => a.isDefault);
+            if (defaultAddress) {
+                selectAddress(defaultAddress.id);
+            }
             loadSavedPaymentMethods();
             updateStepUI();
             

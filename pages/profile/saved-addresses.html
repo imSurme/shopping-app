@@ -472,7 +472,9 @@
                 document.getElementById('addressTitle').value = address.title;
                 document.getElementById('fullName').value = address.fullName;
                 document.getElementById('addressPhone').value = address.phone;
-                document.getElementById('city').value = address.city.toLowerCase();
+                // Match by visible text: 'İstanbul'.toLowerCase() !== 'istanbul' in JS
+                const cityOption = [...document.getElementById('city').options].find(o => o.text === address.city);
+                document.getElementById('city').value = cityOption ? cityOption.value : '';
                 document.getElementById('district').value = address.district;
                 document.getElementById('neighborhood').value = address.neighborhood;
                 document.getElementById('fullAddress').value = address.fullAddress;
@@ -493,6 +495,10 @@
         function deleteAddress(id) {
             if (confirm('Bu adresi silmek istediğinizden emin misiniz?')) {
                 addresses = addresses.filter(a => a.id !== id);
+                // Keep a default address if any remain
+                if (addresses.length > 0 && !addresses.some(a => a.isDefault)) {
+                    addresses[0].isDefault = true;
+                }
                 saveAddresses();
                 renderAddresses();
                 showMessage('Adres silindi!', 'success');
@@ -526,6 +532,11 @@
                 isDefault: document.getElementById('isDefault').checked
             };
 
+            // Only one default address
+            if (addressData.isDefault) {
+                addresses.forEach(a => a.isDefault = false);
+            }
+
             if (editId) {
                 // Update existing
                 const index = addresses.findIndex(a => a.id === parseInt(editId));
@@ -534,10 +545,11 @@
                 }
             } else {
                 // Add new
-                if (addressData.isDefault) {
-                    addresses.forEach(a => a.isDefault = false);
-                }
                 addresses.push(addressData);
+            }
+
+            if (!addresses.some(a => a.isDefault)) {
+                addresses[0].isDefault = true;
             }
 
             saveAddresses();
