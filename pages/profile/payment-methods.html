@@ -436,7 +436,7 @@
                             <p class="text-text-muted-light dark:text-text-muted-dark text-xs">Son Kullanma</p>
                             <p class="text-text-light dark:text-text-dark text-sm font-medium">${payment.expiryDate}</p>
                         </div>
-                        ${payment.isDefault ? '<span class="bg-primary text-white text-xs px-2 py-1 rounded-full">Varsayılan</span>' : '<button onclick="setDefaultPayment(${payment.id})" class="text-primary text-sm font-medium hover:underline">Varsayılan Yap</button>'}
+                        ${payment.isDefault ? '<span class="bg-primary text-white text-xs px-2 py-1 rounded-full">Varsayılan</span>' : `<button onclick="setDefaultPayment(${payment.id})" class="text-primary text-sm font-medium hover:underline">Varsayılan Yap</button>`}
                     </div>
                 `;
                 container.appendChild(card);

@@ -278,7 +278,7 @@
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2 relative" href="shopping-cart.html">
                     <span class="material-symbols-outlined text-2xl">shopping_cart</span>
                     <p class="text-xs font-medium">Sepet</p>
-                    <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge">2</span>
+                    <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2" href="profile/user-profile.html">
                     <span class="material-symbols-outlined text-2xl">person</span>
@@ -459,8 +459,10 @@
 
         // Quantity management
         function increaseQuantity() {
-            currentQuantity++;
-            updateQuantityDisplay();
+            if (currentQuantity < cartManager.maxQuantity) {
+                currentQuantity++;
+                updateQuantityDisplay();
+            }
         }
 
         function decreaseQuantity() {
@@ -548,23 +550,8 @@
                 description: currentProduct.description
             };
             
-            // Add to cart using cart manager
+            // Add to cart using cart manager (shows its own toast)
             cartManager.addToCart(productData);
-            
-            // Show success message instead of navigating
-            showSuccessMessage('Ürün sepete eklendi!');
-        }
-
-        // Success message
-        function showSuccessMessage(message) {
-            const toast = document.createElement('div');
-            toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-primary text-white px-6 py-3 rounded-lg shadow-lg';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
         }
 
         // Dark mode functionality

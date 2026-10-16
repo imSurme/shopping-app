@@ -308,21 +308,32 @@
                     
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        const imageData = e.target.result;
-                        document.querySelector('.profile-picture').style.backgroundImage = `url(${imageData})`;
-                        
-                        // Save profile picture to localStorage
-                        localStorage.setItem('userProfilePicture', imageData);
-                        
-                        // Also update in userPersonalInfo
-                        const savedData = localStorage.getItem('userPersonalInfo');
-                        if (savedData) {
-                            const data = JSON.parse(savedData);
-                            data.profilePicture = imageData;
-                            localStorage.setItem('userPersonalInfo', JSON.stringify(data));
-                        }
-                        
-                        showMessage('Profil fotoğrafı güncellendi!', 'success');
+                        const img = new Image();
+                        img.onload = function() {
+                            // Resize so the data URL fits comfortably in localStorage (~5MB limit)
+                            const maxSize = 256;
+                            const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+                            const canvas = document.createElement('canvas');
+                            canvas.width = Math.round(img.width * scale);
+                            canvas.height = Math.round(img.height * scale);
+                            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                            const imageData = canvas.toDataURL('image/jpeg', 0.85);
+
+                            // Save profile picture to localStorage (single source of truth)
+                            try {
+                                localStorage.setItem('userProfilePicture', imageData);
+                            } catch (error) {
+                                showMessage('Fotoğraf kaydedilemedi, depolama alanı dolu.', 'error');
+                                return;
+                            }
+
+                            document.querySelector('.profile-picture').style.backgroundImage = `url(${imageData})`;
+                            showMessage('Profil fotoğrafı güncellendi!', 'success');
+                        };
+                        img.onerror = function() {
+                            showMessage('Geçersiz resim dosyası!', 'error');
+                        };
+                        img.src = e.target.result;
                     };
                     reader.readAsDataURL(file);
                 }
@@ -334,39 +345,24 @@
         document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Get current profile picture
-            const profilePicture = localStorage.getItem('userProfilePicture') || '';
-            const profilePicElement = document.querySelector('.profile-picture');
-            const currentPicture = profilePicElement ? profilePicElement.style.backgroundImage : '';
-            
-            // Extract image data from style if exists
-            let pictureData = profilePicture;
-            if (!pictureData && currentPicture && currentPicture !== 'none') {
-                // Extract from style.backgroundImage (url("data:image/..."))
-                const match = currentPicture.match(/url\(["']?([^"']+)["']?\)/);
-                if (match && match[1]) {
-                    pictureData = match[1];
-                }
-            }
-            
+            // Profile picture is stored only under 'userProfilePicture'
             const formData = {
                 firstName: document.getElementById('firstName').value,
                 lastName: document.getElementById('lastName').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 birthDate: document.getElementById('birthDate').value,
-                gender: document.querySelector('input[name="gender"]:checked').value,
-                profilePicture: pictureData
+                gender: document.querySelector('input[name="gender"]:checked').value
             };
 
             // Save to localStorage
-            localStorage.setItem('userPersonalInfo', JSON.stringify(formData));
-            
-            // Also save profile picture separately for easy access
-            if (pictureData) {
-                localStorage.setItem('userProfilePicture', pictureData);
+            try {
+                localStorage.setItem('userPersonalInfo', JSON.stringify(formData));
+            } catch (error) {
+                showMessage('Bilgiler kaydedilemedi, depolama alanı dolu.', 'error');
+                return;
             }
-            
+
             showMessage('Kişisel bilgileriniz başarıyla güncellendi!', 'success');
             
             setTimeout(() => {
@@ -389,7 +385,7 @@
                 }
                 
                 // Load profile picture
-                const profilePicture = data.profilePicture || localStorage.getItem('userProfilePicture');
+                const profilePicture = localStorage.getItem('userProfilePicture') || data.profilePicture;
                 if (profilePicture) {
                     const profilePicElement = document.querySelector('.profile-picture');
                     if (profilePicElement) {

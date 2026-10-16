@@ -303,6 +303,9 @@
 
     </div>
 
+    <!-- Cart Manager -->
+    <script src="../../js/cart-manager.js"></script>
+
     <!-- JavaScript for profile functionality -->
     <script>
         // Navigation functions
@@ -437,7 +440,7 @@
             const personalInfo = localStorage.getItem('userPersonalInfo');
             if (personalInfo) {
                 const data = JSON.parse(personalInfo);
-                if (data.profilePicture) {
+                if (data.profilePicture && !profilePicture) {
                     const profilePicElement = document.querySelector('.profile-picture');
                     if (profilePicElement) {
                         profilePicElement.style.backgroundImage = `url(${data.profilePicture})`;

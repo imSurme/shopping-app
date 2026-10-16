@@ -2,6 +2,7 @@
 class CartManager {
     constructor() {
         this.cartKey = 'shoppingCart';
+        this.maxQuantity = 10; // Max adet per cart item (sepet sayfasıyla aynı)
         this.init();
     }
 
@@ -40,17 +41,30 @@ class CartManager {
             item.color === product.color
         );
 
+        const currentQuantity = existingItem ? existingItem.quantity : 0;
+        const newQuantity = Math.min(currentQuantity + product.quantity, this.maxQuantity);
+
+        if (newQuantity === currentQuantity) {
+            this.showMessage(`Bu üründen en fazla ${this.maxQuantity} adet ekleyebilirsiniz.`, 'error');
+            return cart;
+        }
+
         if (existingItem) {
-            existingItem.quantity += product.quantity;
+            existingItem.quantity = newQuantity;
         } else {
             cart.push({
                 ...product,
+                quantity: newQuantity,
                 cartId: Date.now() + Math.random() // Unique cart item ID
             });
         }
 
         this.setCart(cart);
-        this.showMessage('Ürün sepete eklendi!', 'success');
+        if (newQuantity < currentQuantity + product.quantity) {
+            this.showMessage(`Sepetteki adet en fazla ${this.maxQuantity} olabilir.`, 'info');
+        } else {
+            this.showMessage('Ürün sepete eklendi!', 'success');
+        }
         return cart;
     }
 
