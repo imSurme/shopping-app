@@ -12,7 +12,7 @@
     </td>
     <td align="center" style="padding-left: 30px;">
       <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Claude_AI_symbol.svg" alt="Claude AI" height="32"><br>
-      <strong>Claude Opus 4.5</strong>
+      <strong>Claude Opus 4.5 &amp; 5.5</strong>
     </td>
   </tr>
 </table>
@@ -39,6 +39,7 @@ Modern Shopping App is a **demo/simulation** e-commerce web application built wi
 This project was created using:
 - **Google Stitch**: UI/UX design and prototyping
 - **Claude Opus 4.5**: AI-powered code generation and development
+- **Claude Opus 5.5**: Bug fixes and new features (favorites, coupons, shipping, product catalog) with Claude Code
 - **Cursor IDE**: AI-integrated development environment
 - **Vibe Coding Approach**: Rapid prototyping and iterative development with AI collaboration
 
@@ -143,6 +144,7 @@ Modern Shopping App, modern web teknolojileriyle gelistirilmis bir **demo/simula
 Bu proje asagidaki yaklasimlarla olusturuldu:
 - **Google Stitch**: UI/UX tasarim ve prototipleme
 - **Claude Opus 4.5**: AI destekli kod uretimi ve gelistirme
+- **Claude Opus 5.5**: Claude Code ile hata duzeltmeleri ve yeni ozellikler (favoriler, kupon, kargo, urun katalogu)
 - **Cursor IDE**: AI entegreli gelistirme ortami
 - **Vibe Coding Yaklasimi**: AI isbirligi ile hizli prototipleme ve yinelemeli gelistirme
 
@@ -239,6 +241,6 @@ Uc adimli odeme sureci:
 
 **Made with Vibe Coding**
 
-*Design: Google Stitch | Code: Claude Opus 4.5*
+*Design: Google Stitch | Code: Claude Opus 4.5 & Claude Opus 5.5*
 
 </div>
