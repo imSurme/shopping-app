@@ -10,7 +10,7 @@
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -199,11 +199,6 @@
         #summaryCard.is-open .summary-chevron {
             transform: rotate(180deg);
         }
-        
-        /* Sepet: max 3 ürün yüksekliği, sonrası kaydırılabilir (1 ürün ~110px) */
-        #cartItemsWrapper {
-            max-height: 330px;
-        }
     </style>
 </head>
 
@@ -227,7 +222,7 @@
             </div>
         </header>
 
-        <!-- Ürünler alanı: max 3 ürün yüksekliği, fazlası kaydırılır -->
+        <!-- Ürünler alanı: kalan yüksekliği doldurur, fazlası kaydırılır -->
         <div id="cartScrollArea" class="flex-1 flex flex-col min-h-0 overflow-hidden">
             <main id="cartItemsWrapper" class="flex-1 min-h-0 overflow-y-auto overscroll-behavior-y-contain px-4 pt-4">
                 <div id="cartItems" class="pb-4">
@@ -260,13 +255,30 @@
                                     <p class="text-green-500 text-base font-normal leading-normal">Kazancınız</p>
                                     <p class="text-green-500 text-base font-semibold leading-normal text-right" id="savings">-₺0.00</p>
                                 </div>
+                                <div id="couponRow" class="hidden flex justify-between gap-x-6 py-2">
+                                    <p class="text-green-500 text-base font-normal leading-normal" id="couponLabel">Kupon</p>
+                                    <p class="text-green-500 text-base font-semibold leading-normal text-right" id="couponDiscount">-₺0</p>
+                                </div>
                                 <div class="flex justify-between gap-x-6 py-2">
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-base font-normal leading-normal">Kargo</p>
-                                    <p class="text-text-light dark:text-text-dark text-base font-semibold leading-normal text-right">Ücretsiz</p>
+                                    <p class="text-text-light dark:text-text-dark text-base font-semibold leading-normal text-right" id="shipping">Ücretsiz</p>
+                                </div>
+                                <!-- Coupon -->
+                                <div class="pt-2 border-t border-border-light dark:border-border-dark">
+                                    <div id="couponForm" class="flex gap-2 pt-2">
+                                        <input id="couponInput" type="text" autocomplete="off" placeholder="İndirim kodu" class="flex-1 min-w-0 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark px-3 py-2 text-sm uppercase text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary"/>
+                                        <button type="button" onclick="applyCoupon()" class="shrink-0 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white">Uygula</button>
+                                    </div>
+                                    <div id="appliedCoupon" class="hidden flex items-center justify-between gap-2 pt-2">
+                                        <p class="text-sm text-text-light dark:text-text-dark"><span class="material-symbols-outlined text-base align-middle text-primary">sell</span> <span id="appliedCouponText"></span></p>
+                                        <button type="button" onclick="removeCoupon()" class="text-sm font-medium text-red-500">Kaldır</button>
+                                    </div>
+                                    <p id="couponHint" class="hidden text-xs text-text-muted-light dark:text-text-muted-dark pt-1"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <p id="freeShippingHint" class="hidden text-xs text-text-muted-light dark:text-text-muted-dark pt-2"></p>
                 </div>
                 <div class="flex pt-4 justify-center">
                     <button class="checkout-btn flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 flex-1 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em]" onclick="proceedToCheckout()">
@@ -285,6 +297,9 @@
                 <button class="checkout-btn flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-8 mt-4 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em]" onclick="startShopping()">
                     <span class="truncate">Alışverişe Başla</span>
                 </button>
+                <button id="restoreSavedCartEmptyBtn" class="hidden text-primary font-semibold" onclick="restoreSavedCart()">
+                    Kaydedilen sepeti geri yükle
+                </button>
             </div>
         </div>
 
@@ -296,9 +311,11 @@
                     <p class="text-xs font-medium">Ana Sayfa</p>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-primary py-2 relative" href="shopping-cart.html">
-                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                    <span class="relative">
+                        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                        <span class="absolute -top-1.5 -right-3 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
+                    </span>
                     <p class="text-primary text-xs font-semibold">Sepet</p>
-                    <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2" href="profile/user-profile.html">
                     <span class="material-symbols-outlined text-2xl">person</span>
@@ -327,6 +344,10 @@
                     <span class="material-symbols-outlined mr-2">bookmark</span>
                     Daha Sonra İçin Kaydet
                 </button>
+                <button id="restoreSavedCartBtn" class="hidden w-full text-left p-3 rounded-lg hover:bg-card-background-light dark:hover:bg-card-background-dark text-text-light dark:text-text-dark" onclick="restoreSavedCart()">
+                    <span class="material-symbols-outlined mr-2">restore</span>
+                    Kaydedilen Sepeti Geri Yükle
+                </button>
                 <button class="w-full text-left p-3 rounded-lg hover:bg-card-background-light dark:hover:bg-card-background-dark text-text-light dark:text-text-dark" onclick="shareCart()">
                     <span class="material-symbols-outlined mr-2">share</span>
                     Sepeti Paylaş
@@ -335,7 +356,8 @@
         </div>
     </div>
 
-    <!-- Cart Manager -->
+    <!-- Products & Cart Manager -->
+    <script src="../js/products.js"></script>
     <script src="../js/cart-manager.js"></script>
     
     <!-- JavaScript for cart functionality -->
@@ -353,6 +375,8 @@
             const cartSummary = document.getElementById('cartSummary');
             const cartScrollArea = document.getElementById('cartScrollArea');
 
+            updateSavedCartButtons();
+
             if (cartItems.length === 0) {
                 cartItemsContainer.innerHTML = '';
                 if (cartScrollArea) cartScrollArea.classList.add('hidden');
@@ -364,7 +388,7 @@
             emptyCart.classList.add('hidden');
 
             cartItemsContainer.innerHTML = cartItems.map(item => `
-                <div class="cart-item relative flex flex-col bg-card-background-light dark:bg-card-background-dark p-4 mb-3 rounded-xl shadow-soft" data-cart-id="${item.cartId}" data-product-id="${item.id}" data-product-name="${item.name}" data-product-price="${item.price}" data-product-original-price="${item.originalPrice || ''}" data-product-image="${item.image}" data-product-category="${item.category || ''}" data-product-description="${item.description || ''}" data-product-size="${item.size || ''}">
+                <div class="cart-item relative flex flex-col bg-card-background-light dark:bg-card-background-dark p-4 mb-3 rounded-xl shadow-soft" data-cart-id="${item.cartId}" data-product-id="${item.id}" data-product-size="${item.size || ''}">
                     <!-- Delete button - top right -->
                     <button class="delete-btn absolute top-2 right-2 p-1 text-text-muted-light dark:text-text-muted-dark hover:text-red-500 transition-colors z-10">
                         <span class="material-symbols-outlined text-xl">delete</span>
@@ -377,10 +401,10 @@
                         <div class="flex flex-1 flex-col justify-center min-w-0">
                             <p class="product-link cursor-pointer text-text-light dark:text-text-dark text-base font-semibold leading-normal hover:text-primary transition-colors">${item.name}</p>
                             <div class="flex items-center gap-2">
-                                <p class="text-primary text-base font-bold leading-normal">₺${item.price.toFixed(2)}</p>
-                                ${item.originalPrice && item.originalPrice > item.price ? `<p class="text-text-muted-light dark:text-text-muted-dark text-sm line-through">₺${item.originalPrice.toFixed(2)}</p>` : ''}
+                                <p class="text-primary text-base font-bold leading-normal">${formatPrice(item.price)}</p>
+                                ${item.originalPrice && item.originalPrice > item.price ? `<p class="text-text-muted-light dark:text-text-muted-dark text-sm line-through">${formatPrice(item.originalPrice)}</p>` : ''}
                             </div>
-                            <p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Beden: ${item.size}</p>
+                            ${item.size && item.size !== 'Standart' ? `<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Beden: ${item.size}</p>` : ''}
                         </div>
                     </div>
                     <!-- Quantity controls - sağ alt -->
@@ -397,35 +421,53 @@
 
         // Update cart totals
         function updateCartTotals() {
-            const cart = cartManager.getCart();
-            
-            // Calculate subtotal with original prices (before discount)
-            let subtotalOriginal = 0;
-            let totalSavings = 0;
-            
-            cart.forEach(item => {
-                if (item.originalPrice && item.originalPrice > item.price) {
-                    subtotalOriginal += item.originalPrice * item.quantity;
-                    totalSavings += (item.originalPrice - item.price) * item.quantity;
-                } else {
-                    subtotalOriginal += item.price * item.quantity;
-                }
-            });
-            
-            const total = cartManager.getCartTotal(); // Actual price to pay
+            const summary = cartManager.getSummary();
 
-            document.getElementById('subtotal').textContent = `₺${subtotalOriginal.toFixed(2)}`;
-            const totalEl = document.getElementById('total');
-            if (totalEl) totalEl.textContent = `₺${total.toFixed(2)}`;
-            
-            // Show savings if there are any discounts
-            const savingsRow = document.getElementById('savingsRow');
-            if (totalSavings > 0) {
-                document.getElementById('savings').textContent = `-₺${totalSavings.toFixed(2)}`;
-                savingsRow.classList.remove('hidden');
+            document.getElementById('subtotal').textContent = formatPrice(summary.originalSubtotal);
+            document.getElementById('total').textContent = formatPrice(summary.total);
+
+            // Product discounts
+            document.getElementById('savings').textContent = `-${formatPrice(summary.productSavings)}`;
+            document.getElementById('savingsRow').classList.toggle('hidden', summary.productSavings <= 0);
+
+            // Coupon discount
+            document.getElementById('couponDiscount').textContent = `-${formatPrice(summary.couponDiscount)}`;
+            document.getElementById('couponLabel').textContent = summary.coupon ? `Kupon (${summary.coupon.code})` : 'Kupon';
+            document.getElementById('couponRow').classList.toggle('hidden', summary.couponDiscount <= 0);
+
+            // Shipping
+            document.getElementById('shipping').textContent = summary.shipping ? formatPrice(summary.shipping) : 'Ücretsiz';
+            const shippingHint = document.getElementById('freeShippingHint');
+            shippingHint.textContent = `Kargo bedava için ${formatPrice(summary.amountForFreeShipping)} daha ekleyin.`;
+            shippingHint.classList.toggle('hidden', summary.amountForFreeShipping <= 0);
+
+            // Coupon form state
+            const applied = summary.coupon || summary.couponInactive;
+            document.getElementById('couponForm').classList.toggle('hidden', !!applied);
+            document.getElementById('appliedCoupon').classList.toggle('hidden', !applied);
+            document.getElementById('appliedCouponText').textContent = applied ? `${applied.code}: ${applied.label}` : '';
+            const couponHint = document.getElementById('couponHint');
+            couponHint.textContent = summary.couponInactive
+                ? `Kupon için sepet tutarı en az ${formatPrice(summary.couponInactive.minTotal)} olmalı.`
+                : 'Demo kodları: HOSGELDIN10, INDIRIM100, KARGOBEDAVA';
+            couponHint.classList.toggle('hidden', !!summary.coupon);
+        }
+
+        function applyCoupon() {
+            const input = document.getElementById('couponInput');
+            const result = cartManager.applyCoupon(input.value);
+            if (result.ok) {
+                input.value = '';
+                showSuccessMessage(result.message);
             } else {
-                savingsRow.classList.add('hidden');
+                showErrorMessage(result.message);
             }
+            updateCartTotals();
+        }
+
+        function removeCoupon() {
+            cartManager.removeCoupon();
+            updateCartTotals();
         }
 
         // Quantity management
@@ -505,11 +547,34 @@
             closeCartOptions();
         }
 
+        // Moves the cart into the saved cart (overwrites an older saved cart)
         function saveForLater() {
-            // Save cart items for later functionality
-            localStorage.setItem('savedCart', JSON.stringify(cartManager.getCart()));
             closeCartOptions();
+            if (cartManager.getCartCount() === 0) {
+                showErrorMessage('Sepetiniz boş!');
+                return;
+            }
+            if (cartManager.getSavedCart().length > 0 &&
+                !confirm('Daha önce kaydedilmiş bir sepetiniz var. Üzerine yazılsın mı?')) {
+                return;
+            }
+            cartManager.saveCartForLater();
+            renderCartItems();
             showSuccessMessage('Sepet daha sonra için kaydedildi!');
+        }
+
+        // Adds saved items back into the cart
+        function restoreSavedCart() {
+            closeCartOptions();
+            const count = cartManager.restoreSavedCart();
+            renderCartItems();
+            showSuccessMessage(`${count} ürün sepete geri yüklendi!`);
+        }
+
+        function updateSavedCartButtons() {
+            const hasSaved = cartManager.getSavedCart().length > 0;
+            document.getElementById('restoreSavedCartBtn').classList.toggle('hidden', !hasSaved);
+            document.getElementById('restoreSavedCartEmptyBtn').classList.toggle('hidden', !hasSaved);
         }
 
         function shareCart() {
@@ -599,20 +664,7 @@
 
         // Navigate to product detail
         function goToProduct(cartItem) {
-            const productId = cartItem.dataset.productId;
-            const productName = encodeURIComponent(cartItem.dataset.productName);
-            const productPrice = cartItem.dataset.productPrice;
-            const productOriginalPrice = cartItem.dataset.productOriginalPrice || '';
-            const productImage = encodeURIComponent(cartItem.dataset.productImage);
-            const productCategory = cartItem.dataset.productCategory || '';
-            const productDescription = encodeURIComponent(cartItem.dataset.productDescription || '');
-            const productSize = cartItem.dataset.productSize || '';
-            
-            let url = `product-detail.html?id=${productId}&name=${productName}&price=${productPrice}&image=${productImage}&category=${productCategory}&description=${productDescription}&size=${productSize}`;
-            if (productOriginalPrice) {
-                url += `&originalPrice=${productOriginalPrice}`;
-            }
-            window.location.href = url;
+            window.location.href = getProductUrl(cartItem.dataset.productId, 'product-detail.html', cartItem.dataset.productSize);
         }
 
         // Event delegation for cart buttons
@@ -669,6 +721,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             renderCartItems();
             initSummaryToggle();
+            document.getElementById('couponInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') applyCoupon();
+            });
         });
     </script>
 </body>

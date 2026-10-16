@@ -10,7 +10,7 @@
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -240,7 +240,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark mb-1">Telefon</label>
-                            <input type="tel" id="phone" class="form-input w-full px-4 py-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:outline-none transition-all" placeholder="0555 555 55 55">
+                            <input type="tel" id="phone" data-phone-tr class="form-input w-full px-4 py-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:outline-none transition-all">
                         </div>
                         
                         <div>
@@ -390,9 +390,13 @@
                             <span class="text-green-500">Kazancınız</span>
                             <span id="summarySavings" class="font-medium text-green-500">-₺0.00</span>
                         </div>
+                        <div id="summaryCouponRow" class="hidden flex justify-between">
+                            <span id="summaryCouponLabel" class="text-green-500">Kupon</span>
+                            <span id="summaryCoupon" class="font-medium text-green-500">-₺0</span>
+                        </div>
                         <div class="flex justify-between">
                             <span class="text-text-muted-light dark:text-text-muted-dark">Kargo</span>
-                            <span class="font-medium text-text-light dark:text-text-dark">Ücretsiz</span>
+                            <span id="summaryShipping" class="font-medium text-text-light dark:text-text-dark">Ücretsiz</span>
                         </div>
                         <div class="border-t border-border-light dark:border-border-dark my-2"></div>
                         <div class="flex justify-between">
@@ -437,6 +441,7 @@
 
     <!-- Cart Manager -->
     <script src="../js/cart-manager.js"></script>
+    <script src="../js/phone-input.js"></script>
     
     <!-- JavaScript -->
     <script>
@@ -498,7 +503,7 @@
             if (addr) {
                 document.getElementById('firstName').value = addr.fullName.split(' ')[0] || '';
                 document.getElementById('lastName').value = addr.fullName.split(' ').slice(1).join(' ') || '';
-                document.getElementById('phone').value = addr.phone || '';
+                document.getElementById('phone').value = formatTrPhone(addr.phone);
                 document.getElementById('address').value = addr.fullAddress || '';
                 const citySelect = document.getElementById('city');
                 if (addr.city && ![...citySelect.options].some(o => o.value === addr.city)) {
@@ -678,6 +683,11 @@
                 showError('Lütfen tüm alanları doldurun.');
                 return false;
             }
+
+            if (!isValidTrPhone(phone)) {
+                showError('Geçerli bir telefon numarası girin: +90 5XX XXX XX XX');
+                return false;
+            }
             
             return true;
         }
@@ -775,11 +785,11 @@
                     <div class="w-12 h-12 rounded-lg bg-cover bg-center" style="background-image: url('${item.image}');"></div>
                     <div class="flex-1">
                         <p class="font-medium text-text-light dark:text-text-dark text-sm">${item.name}</p>
-                        <p class="text-xs text-text-muted-light dark:text-text-muted-dark">${item.size} × ${item.quantity}</p>
+                        <p class="text-xs text-text-muted-light dark:text-text-muted-dark">${item.size && item.size !== 'Standart' ? `${item.size} × ` : ''}${item.quantity} adet</p>
                     </div>
                     <div class="text-right">
-                        <p class="font-semibold text-primary">₺${(item.price * item.quantity).toFixed(2)}</p>
-                        ${item.originalPrice && item.originalPrice > item.price ? `<p class="text-xs text-text-muted-light dark:text-text-muted-dark line-through">₺${(item.originalPrice * item.quantity).toFixed(2)}</p>` : ''}
+                        <p class="font-semibold text-primary">${formatPrice(item.price * item.quantity)}</p>
+                        ${item.originalPrice && item.originalPrice > item.price ? `<p class="text-xs text-text-muted-light dark:text-text-muted-dark line-through">${formatPrice(item.originalPrice * item.quantity)}</p>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -812,32 +822,17 @@
             }
             document.getElementById('summaryPayment').textContent = paymentSummaryText;
             
-            // Calculate totals with discount
-            let subtotalOriginal = 0;
-            let totalSavings = 0;
-            
-            cart.forEach(item => {
-                if (item.originalPrice && item.originalPrice > item.price) {
-                    subtotalOriginal += item.originalPrice * item.quantity;
-                    totalSavings += (item.originalPrice - item.price) * item.quantity;
-                } else {
-                    subtotalOriginal += item.price * item.quantity;
-                }
-            });
-            
-            const total = cartManager.getCartTotal();
-            
-            document.getElementById('summarySubtotal').textContent = `₺${subtotalOriginal.toFixed(2)}`;
-            document.getElementById('summaryTotal').textContent = `₺${total.toFixed(2)}`;
-            
-            // Show savings if there are any discounts
-            const savingsRow = document.getElementById('savingsRow');
-            if (totalSavings > 0) {
-                document.getElementById('summarySavings').textContent = `-₺${totalSavings.toFixed(2)}`;
-                savingsRow.classList.remove('hidden');
-            } else {
-                savingsRow.classList.add('hidden');
-            }
+            // Totals (product discounts, coupon, shipping)
+            const summary = cartManager.getSummary();
+
+            document.getElementById('summarySubtotal').textContent = formatPrice(summary.originalSubtotal);
+            document.getElementById('summarySavings').textContent = `-${formatPrice(summary.productSavings)}`;
+            document.getElementById('savingsRow').classList.toggle('hidden', summary.productSavings <= 0);
+            document.getElementById('summaryCouponLabel').textContent = summary.coupon ? `Kupon (${summary.coupon.code})` : 'Kupon';
+            document.getElementById('summaryCoupon').textContent = `-${formatPrice(summary.couponDiscount)}`;
+            document.getElementById('summaryCouponRow').classList.toggle('hidden', summary.couponDiscount <= 0);
+            document.getElementById('summaryShipping').textContent = summary.shipping ? formatPrice(summary.shipping) : 'Ücretsiz';
+            document.getElementById('summaryTotal').textContent = formatPrice(summary.total);
         }
         
         // Complete order
@@ -849,9 +844,9 @@
             // Save order to localStorage
             saveOrder(orderNumber);
             
-            // Clear cart silently (without showing message)
-            localStorage.setItem('shoppingCart', '[]');
-            cartManager.updateCartBadge();
+            // Clear cart and coupon silently (without showing message)
+            cartManager.setCart([]);
+            cartManager.removeCoupon();
             
             // Hide all sections and action bar
             document.getElementById('addressSection').classList.add('hidden');
@@ -870,14 +865,8 @@
         // Save order to localStorage
         function saveOrder(orderNumber) {
             const cart = cartManager.getCart();
-            const total = cartManager.getCartTotal();
-            
-            const paymentNames = {
-                'card': 'Kredi / Banka Kartı',
-                'cash': 'Kapıda Ödeme',
-                'transfer': 'Havale / EFT'
-            };
-            
+            const summary = cartManager.getSummary();
+
             let paymentMethodText = '';
             if (selectedPayment === 'card' && selectedPaymentCardId) {
                 const pm = savedPaymentMethods.find(p => p.id === selectedPaymentCardId);
@@ -896,7 +885,12 @@
                 date: new Date().toISOString(),
                 status: 'processing',
                 items: cart,
-                total: total,
+                originalSubtotal: summary.originalSubtotal,
+                productSavings: summary.productSavings,
+                couponCode: summary.coupon ? summary.coupon.code : null,
+                couponDiscount: summary.couponDiscount,
+                shipping: summary.shipping,
+                total: summary.total,
                 address: {
                     firstName: document.getElementById('firstName').value,
                     lastName: document.getElementById('lastName').value,

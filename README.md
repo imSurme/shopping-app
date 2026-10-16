@@ -44,11 +44,12 @@ This project was created using:
 
 ### Features
 
-- **Product Catalog**: Browse products with category filtering and search functionality
-- **Product Details**: Detailed product pages with size selection, quantity picker, and reviews
-- **Shopping Cart**: Full cart management with quantity adjustments and price calculations
+- **Product Catalog**: 17 products with category filtering, search and sorting (price, newest, rating)
+- **Product Details**: Size selection, quantity picker, reviews and similar products
+- **Favorites**: Save products with the heart icon and list them under Profile > Favorilerim
+- **Shopping Cart**: Quantity adjustments, save cart for later / restore, coupon codes and shipping fee (free above ₺1.000)
 - **Checkout Process**: Multi-step checkout simulation with address and payment method selection (demo only - no real payments)
-- **User Profile**: Personal information, saved addresses, payment methods, and order history
+- **User Profile**: Personal information, saved addresses, payment methods, and order history (cancel / reorder)
 - **Dark Mode**: Eye-friendly dark theme support
 - **Responsive Design**: Mobile-first design that works on all devices
 - **LocalStorage**: Persistent data storage for cart, orders, and user preferences
@@ -70,7 +71,8 @@ shopping_app/
 ├── index.html                      # Home page - Product listing
 ├── README.md                       # Documentation
 ├── js/
-│   └── cart-manager.js             # Cart management system
+│   ├── products.js                 # Product catalog and favorites
+│   └── cart-manager.js             # Cart, coupons and shipping
 ├── pages/
 │   ├── product-detail.html         # Product detail page
 │   ├── shopping-cart.html          # Shopping cart
@@ -81,6 +83,7 @@ shopping_app/
 │       ├── saved-addresses.html    # Saved addresses
 │       ├── payment-methods.html    # Payment methods
 │       ├── orders.html             # Order history
+│       ├── favorites.html          # Favorite products
 │       └── settings.html           # App settings
 ```
 
@@ -113,6 +116,13 @@ A centralized cart management system that handles:
 - LocalStorage persistence
 - Cart badge updates
 
+#### Demo Coupon Codes
+| Code | Effect |
+|------|--------|
+| `HOSGELDIN10` | 10% off |
+| `INDIRIM100` | ₺100 off (min. ₺750) |
+| `KARGOBEDAVA` | Free shipping |
+
 #### Checkout Flow
 Three-step checkout process:
 1. **Address**: Delivery address selection/entry
@@ -138,11 +148,12 @@ Bu proje asagidaki yaklasimlarla olusturuldu:
 
 ### Ozellikler
 
-- **Urun Katalogu**: Kategori filtreleme ve arama ozellikleriyle urunlere gozatin
-- **Urun Detaylari**: Beden secimi, miktar secici ve degerlendirmeler iceren detayli urun sayfalari
-- **Alisveris Sepeti**: Miktar ayarlama ve fiyat hesaplamalari ile tam sepet yonetimi
+- **Urun Katalogu**: Kategori filtreleme, arama ve siralama (fiyat, en yeni, puan) ile 17 urun
+- **Urun Detaylari**: Beden secimi, miktar secici, degerlendirmeler ve benzer urunler
+- **Favoriler**: Kalp ikonuyla urun kaydetme, Profil > Favorilerim sayfasinda listeleme
+- **Alisveris Sepeti**: Miktar ayarlama, sepeti sonra icin kaydetme / geri yukleme, indirim kodu ve kargo ucreti (₺1.000 uzeri ucretsiz)
 - **Odeme Sureci**: Adres ve odeme yontemi secimli cok adimli odeme simulasyonu (yalnizca demo - gercek odeme yapilmaz)
-- **Kullanici Profili**: Kisisel bilgiler, kayitli adresler, odeme yontemleri ve siparis gecmisi
+- **Kullanici Profili**: Kisisel bilgiler, kayitli adresler, odeme yontemleri ve siparis gecmisi (iptal / tekrar siparis)
 - **Karanlik Mod**: Goz dostu karanlik tema destegi
 - **Duyarli Tasarim**: Tum cihazlarda calisan mobil oncelikli tasarim
 - **LocalStorage**: Sepet, siparisler ve kullanici tercihleri icin kalici veri depolama
@@ -164,7 +175,8 @@ shopping_app/
 ├── index.html                      # Ana sayfa - Urun listesi
 ├── README.md                       # Dokumantasyon
 ├── js/
-│   └── cart-manager.js             # Sepet yonetim sistemi
+│   ├── products.js                 # Urun katalogu ve favoriler
+│   └── cart-manager.js             # Sepet, kupon ve kargo hesabi
 ├── pages/
 │   ├── product-detail.html         # Urun detay sayfasi
 │   ├── shopping-cart.html          # Alisveris sepeti
@@ -175,6 +187,7 @@ shopping_app/
 │       ├── saved-addresses.html    # Kayitli adresler
 │       ├── payment-methods.html    # Odeme yontemleri
 │       ├── orders.html             # Siparis gecmisi
+│       ├── favorites.html          # Favori urunler
 │       └── settings.html           # Uygulama ayarlari
 ```
 
@@ -206,6 +219,13 @@ Asagidakileri yoneten merkezi sepet yonetim sistemi:
 - Sepet toplami hesaplamalari
 - LocalStorage kaliciligi
 - Sepet rozeti guncellemeleri
+
+#### Demo Indirim Kodlari
+| Kod | Etkisi |
+|-----|--------|
+| `HOSGELDIN10` | %10 indirim |
+| `INDIRIM100` | ₺100 indirim (min. ₺750) |
+| `KARGOBEDAVA` | Ucretsiz kargo |
 
 #### Odeme Akisi
 Uc adimli odeme sureci:

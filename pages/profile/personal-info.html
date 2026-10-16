@@ -9,7 +9,7 @@
     <title>Kişisel Bilgiler - Modern Shopping App</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     
     <!-- Tailwind CSS -->
@@ -154,7 +154,9 @@
                 <!-- Profile Picture Section -->
                 <div class="flex flex-col items-center gap-4 mb-2">
                     <div class="relative">
-                        <div class="profile-picture bg-center bg-no-repeat aspect-square bg-cover rounded-full w-24 h-24 shadow-soft" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBz6kB9UzaMDudliW3CEbxeWqqx0wt-8Q7yMp3txZGeIZswewGS7DNZr9KqdxoqY7_sreLR7UMcUwCoZ0D3OPQqzj3k5GZDrgyf8UZ1ysJ4PJO0Q_ctQEMSeDCps6CeZ0rbrXno79Ushd6DQ4Bm5vvtrL3OJTSnmVfMY2Ztaovkky4VnY2VvrZi15F8meEeMu8MfG7a0T8FmtkiFSNOTi1mlM3-0BcMBp9ZRbl9KTX0tn2KB5M7XOg9yjSqX1fd9uPLxFIPOgzlNWo");'></div>
+                        <div class="profile-picture flex items-center justify-center bg-primary/10 bg-center bg-no-repeat aspect-square bg-cover rounded-full w-24 h-24 shadow-soft">
+                            <span id="profilePlaceholder" class="material-symbols-outlined text-5xl text-primary">person</span>
+                        </div>
                         <button type="button" onclick="changeProfilePicture()" class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg hover:bg-primary-dark transition-colors">
                             <span class="material-symbols-outlined text-lg">camera_alt</span>
                         </button>
@@ -171,7 +173,6 @@
                         name="firstName"
                         class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary"
                         placeholder="Adınızı girin"
-                        value="Ayşe"
                         required
                     />
                 </div>
@@ -185,7 +186,6 @@
                         name="lastName"
                         class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary"
                         placeholder="Soyadınızı girin"
-                        value="Yılmaz"
                         required
                     />
                 </div>
@@ -199,7 +199,6 @@
                         name="email"
                         class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary"
                         placeholder="E-posta adresinizi girin"
-                        value="ayse.yilmaz@example.com"
                         required
                     />
                 </div>
@@ -211,9 +210,8 @@
                         type="tel" 
                         id="phone" 
                         name="phone"
+                        data-phone-tr
                         class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary"
-                        placeholder="05XX XXX XX XX"
-                        value="0555 123 45 67"
                         required
                     />
                 </div>
@@ -226,7 +224,6 @@
                         id="birthDate" 
                         name="birthDate"
                         class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary"
-                        value="1990-05-15"
                         required
                     />
                 </div>
@@ -236,7 +233,7 @@
                     <label class="text-text-light dark:text-text-dark text-sm font-semibold">Cinsiyet</label>
                     <div class="flex gap-3">
                         <label class="flex-1 flex items-center gap-3 p-4 rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark cursor-pointer hover:border-primary transition-colors">
-                            <input type="radio" name="gender" value="female" class="w-4 h-4 text-primary" checked />
+                            <input type="radio" name="gender" value="female" class="w-4 h-4 text-primary" />
                             <span class="text-text-light dark:text-text-dark text-sm font-medium">Kadın</span>
                         </label>
                         <label class="flex-1 flex items-center gap-3 p-4 rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark cursor-pointer hover:border-primary transition-colors">
@@ -265,9 +262,11 @@
                     <p class="text-xs font-medium">Ana Sayfa</p>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2 relative" href="../shopping-cart.html">
-                    <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                    <span class="relative">
+                        <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                        <span class="absolute -top-1.5 -right-3 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
+                    </span>
                     <p class="text-xs font-medium">Sepet</p>
-                    <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-primary py-2" href="user-profile.html">
                     <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">person</span>
@@ -280,6 +279,7 @@
 
     <!-- Cart Manager -->
     <script src="../../js/cart-manager.js"></script>
+    <script src="../../js/phone-input.js"></script>
     
     <!-- JavaScript -->
     <script>
@@ -327,7 +327,7 @@
                                 return;
                             }
 
-                            document.querySelector('.profile-picture').style.backgroundImage = `url(${imageData})`;
+                            showProfilePicture(imageData);
                             showMessage('Profil fotoğrafı güncellendi!', 'success');
                         };
                         img.onerror = function() {
@@ -352,7 +352,7 @@
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 birthDate: document.getElementById('birthDate').value,
-                gender: document.querySelector('input[name="gender"]:checked').value
+                gender: document.querySelector('input[name="gender"]:checked')?.value || ''
             };
 
             // Save to localStorage
@@ -370,6 +370,11 @@
             }, 1500);
         });
 
+        function showProfilePicture(imageData) {
+            document.querySelector('.profile-picture').style.backgroundImage = `url(${imageData})`;
+            document.getElementById('profilePlaceholder').classList.add('hidden');
+        }
+
         // Load saved data
         function loadPersonalInfo() {
             const savedData = localStorage.getItem('userPersonalInfo');
@@ -378,7 +383,7 @@
                 document.getElementById('firstName').value = data.firstName || '';
                 document.getElementById('lastName').value = data.lastName || '';
                 document.getElementById('email').value = data.email || '';
-                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('phone').value = formatTrPhone(data.phone);
                 document.getElementById('birthDate').value = data.birthDate || '';
                 if (data.gender) {
                     document.querySelector(`input[name="gender"][value="${data.gender}"]`).checked = true;
@@ -389,7 +394,7 @@
                 if (profilePicture) {
                     const profilePicElement = document.querySelector('.profile-picture');
                     if (profilePicElement) {
-                        profilePicElement.style.backgroundImage = `url(${profilePicture})`;
+                        showProfilePicture(profilePicture);
                     }
                 }
             } else {
@@ -398,7 +403,7 @@
                 if (profilePicture) {
                     const profilePicElement = document.querySelector('.profile-picture');
                     if (profilePicElement) {
-                        profilePicElement.style.backgroundImage = `url(${profilePicture})`;
+                        showProfilePicture(profilePicture);
                     }
                 }
             }

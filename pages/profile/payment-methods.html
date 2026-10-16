@@ -9,7 +9,7 @@
     <title>Ödeme Yöntemleri - Modern Shopping App</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     
     <!-- Tailwind CSS -->
@@ -245,9 +245,11 @@
                     <p class="text-xs font-medium">Ana Sayfa</p>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2 relative" href="../shopping-cart.html">
-                    <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                    <span class="relative">
+                        <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                        <span class="absolute -top-1.5 -right-3 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
+                    </span>
                     <p class="text-xs font-medium">Sepet</p>
-                    <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-primary py-2" href="user-profile.html">
                     <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">person</span>

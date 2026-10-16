@@ -9,7 +9,7 @@
     <title>Kayıtlı Adresler - Modern Shopping App</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     
     <!-- Tailwind CSS -->
@@ -245,9 +245,11 @@
                     <p class="text-xs font-medium">Ana Sayfa</p>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-text-muted-light dark:text-text-muted-dark py-2 relative" href="../shopping-cart.html">
-                    <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                    <span class="relative">
+                        <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                        <span class="absolute -top-1.5 -right-3 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
+                    </span>
                     <p class="text-xs font-medium">Sepet</p>
-                    <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold cart-badge hidden">0</span>
                 </a>
                 <a class="nav-item flex flex-1 flex-col items-center justify-center gap-1 text-primary py-2" href="user-profile.html">
                     <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">person</span>
@@ -286,7 +288,7 @@
                     
                     <div class="flex flex-col gap-2">
                         <label class="text-text-light dark:text-text-dark text-sm font-semibold">Telefon</label>
-                        <input type="tel" id="addressPhone" class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary" placeholder="05XX XXX XX XX" required />
+                        <input type="tel" id="addressPhone" data-phone-tr class="form-input w-full rounded-xl border border-border-light dark:border-border-dark bg-card-background-light dark:bg-card-background-dark px-4 py-3 text-text-light dark:text-text-dark placeholder-text-muted-light dark:placeholder-text-muted-dark focus:ring-2 focus:ring-primary" required />
                     </div>
                     
                     <div class="flex flex-col gap-2">
@@ -334,6 +336,7 @@
 
     <!-- Cart Manager -->
     <script src="../../js/cart-manager.js"></script>
+    <script src="../../js/phone-input.js"></script>
     
     <!-- JavaScript -->
     <script>
@@ -360,7 +363,7 @@
                         id: 1,
                         title: 'Ev',
                         fullName: 'Ayşe Yılmaz',
-                        phone: '0555 123 45 67',
+                        phone: '+90 555 123 45 67',
                         city: 'İstanbul',
                         district: 'Kadıköy',
                         neighborhood: 'Moda',
@@ -371,7 +374,7 @@
                         id: 2,
                         title: 'İş',
                         fullName: 'Ayşe Yılmaz',
-                        phone: '0555 123 45 67',
+                        phone: '+90 555 123 45 67',
                         city: 'İstanbul',
                         district: 'Şişli',
                         neighborhood: 'Mecidiyeköy',
@@ -471,7 +474,7 @@
                 document.getElementById('editAddressId').value = address.id;
                 document.getElementById('addressTitle').value = address.title;
                 document.getElementById('fullName').value = address.fullName;
-                document.getElementById('addressPhone').value = address.phone;
+                document.getElementById('addressPhone').value = formatTrPhone(address.phone);
                 // Match by visible text: 'İstanbul'.toLowerCase() !== 'istanbul' in JS
                 const cityOption = [...document.getElementById('city').options].find(o => o.text === address.city);
                 document.getElementById('city').value = cityOption ? cityOption.value : '';
