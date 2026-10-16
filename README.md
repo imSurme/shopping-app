@@ -2,12 +2,12 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 
 <table>
   <tr>
     <td align="center">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google Stitch" height="32"><br>
+      <img src="https://www.gstatic.com/labs-code/stitch/favicon-192x192.png" alt="Google Stitch" height="32"><br>
       <strong>Google Stitch</strong>
     </td>
     <td align="center" style="padding-left: 30px;">
